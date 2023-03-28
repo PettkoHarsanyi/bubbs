@@ -42,8 +42,6 @@
 
         var idk = document.getElementById("idk");
 
-        isGoneOutOnce = false;
-
         bonusDiv.style.visibility = "visible";
         comboDiv.style.visibility = "visible";
 
@@ -78,7 +76,7 @@
 
                             comboDiv.style.visibility = "visible";
                             comboDiv.className = "comboDivAppear";
-                            isGoneOutOnce = true;
+                            game.ball.isGoneOutOnce = true;
                             setTimeout(() => {
                                 comboDivLeft = getComputedStyle(comboDiv);
                                 canvasDivStyle = getComputedStyle(canvas);
@@ -102,7 +100,7 @@
                             bonusDiv.style.visibility = "visible";
                             bonusDiv.className = "disappearDiv";
 
-                            if (isGoneOutOnce == true) {
+                            if (game.ball.isGoneOutOnce == true) {
                                 comboDiv.className = "comboDivDisappear";
                             }
 

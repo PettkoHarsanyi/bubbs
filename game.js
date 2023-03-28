@@ -17,7 +17,8 @@ class Game {
         leftPressed: false, // BALRA MEGY
         rightPressed: false, // JOBBRA MEGY
         getsBonus: false,
-        combo: 1
+        combo: 1,
+        isGoneOutOnce: false,
     }
     round = {
         number: 1,
