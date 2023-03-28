@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+
+    <title>Bubbs</title>
+
+    <link rel="stylesheet" media="screen and (max-width: 19200px)" href="./widescreen.css">
+    <link rel="stylesheet" media="screen and (max-width: 1740px)" href="smallscreen.css">
+</head>
+
+<body>
+    <canvas id="gameCanvas" width="1280" height="720" ;></canvas>
+    <button onclick="location.href='./index.html'">BACK</button>
+    <div id="spaceDiv">PRESS SPACE TO START</div>
+    <div id="idk"></div>
+    <div id="scoreDiv" style="display: inline-block">
+        <p style="font-size: 2vw;position:absolute; top:-2.4vw;">Points</p>0
+    </div>
+    <div id="bonusDiv" style="display: inline-block">0</div>
+    <div id="comboDiv" style="display: inline-block">
+        <p style="font-size: 2vw;position:absolute; top:-2.4vw;">Combo</p>
+    </div>
+
+    <script src="./redzone.js" ></script>
+    <script src="./greenzone.js" ></script>
+    <script src="./game.js" ></script>
+    <script>
+        var canvas = document.getElementById("gameCanvas");
+        var ctx = canvas.getContext("2d");
+
+        var game = new Game(ctx);
+
+        var scoreDiv = document.getElementById("scoreDiv");
+        var bonusDiv = document.getElementById("bonusDiv");
+        var comboDiv = document.getElementById("comboDiv");
+
+        var scoreDivFirstChild = document.getElementById("scoreDiv:first-child");
+        var comboDivFirstChild = document.getElementById("comboDiv:first-child");
+
+
+        var idk = document.getElementById("idk");
+
+        isGoneOutOnce = false;
+
+        bonusDiv.style.visibility = "visible";
+        comboDiv.style.visibility = "visible";
+
+        function getRndInteger(min, max) { // RANDOM SZÁM MIN ÉS MAX KÖZÖTT, MIN-T BELEÉRTVE
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        var idkStyle = getComputedStyle(idk);
+
+        if (idkStyle.height.slice(0, -2) == 10) {
+            canvas.setAttribute("width", "896px");       //  NEM TOM MIT CSINALJAK EZZEL
+            canvas.setAttribute("height", "504px");
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (game.time % game.round.refresh == 0) {
+                if (game.round.number > 1) {
+
+
+                    if (game.greenZone.ballInside()) {              // HA A JÁTÉKOS BENNE VAN A ZÖLD MEZŐBE, MIKOR A KÖR VÉGE VAN
+                        if (game.ball.getsBonus == true)                                                                // ÉS BÓNUSZT KAP
+                        {
+                            game.scoreGive = game.scoreGive + 10;
+                            game.ball.combo++;
+
+                            // STÍLUSOK
+                            game.greenZone.color = "gold";   // AKKOR ARANY LESZ A KÖR
+                            bonusDiv.style.color = "gold";
+                            bonusDiv.style.visibility = "visible";
+                            bonusDiv.className = "disappearDiv";
+
+                            comboDiv.style.visibility = "visible";
+                            comboDiv.className = "comboDivAppear";
+                            isGoneOutOnce = true;
+                            setTimeout(() => {
+                                comboDivLeft = getComputedStyle(comboDiv);
+                                canvasDivStyle = getComputedStyle(canvas);
+
+                                if (idkStyle.height.slice(0, -2) == 100) {
+                                    comboDiv.style.left = "3vw";
+                                    comboDiv.style.top = "36vw";
+                                }
+                                else {
+                                    comboDiv.style.top = "3vw";
+                                    comboDiv.style.left = "65vw";
+                                }
+                            }, 1000);
+
+                        } else {                                                                                // VAGY NEM KAP BÓNUSZT
+
+                            game.scoreGive = 10;
+
+                            // STÍLUSOK
+                            bonusDiv.style.color = "white";
+                            bonusDiv.style.visibility = "visible";
+                            bonusDiv.className = "disappearDiv";
+
+                            if (isGoneOutOnce == true) {
+                                comboDiv.className = "comboDivDisappear";
+                            }
+
+                            setTimeout(() => {
+                                if (idkStyle.height.slice(0, -2) == 100) {
+                                    comboDiv.style.left = "-400px";
+                                    comboDiv.style.top = "36vw";
+                                }
+                                else {
+                                    comboDiv.style.top = "-200px";
+                                }
+                                game.ball.combo = 1;
+                            }, 1000);
+
+                        }
+                        game.score += game.scoreGive;
+                        game.ball.getsBonus = false;
+
+                        scoreDiv.innerHTML = `<p style="font-size: 2vw ;position:absolute; top:-2.4vw;">Points</p>` + game.score;
+                        bonusDiv.innerHTML = "+" + game.scoreGive;
+                        comboDiv.innerHTML = `<p style="font-size: 2vw ;position:absolute; top:-2.4vw;">Combo</p>` + game.ball.combo + "X";
+
+                    } else {
+                        var lost = true;               // HA NINCS BENNE A JÁTÉKOS A ZÖLD MEZŐBEN MIKOR A KÖR VÉGE VAN, AKKOR VESZÍT
+                    }
+
+                    clearInterval(interval);
+                    game.playing = false;
+
+                    if (lost == true) {
+                        ctx.beginPath();
+                        ctx.rect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = "red";
+                        ctx.fill();
+                        ctx.closePath();
+                    }
+                    else {
+                        ctx.beginPath();
+                        ctx.rect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = "rgb(51, 153, 102)";
+                        ctx.fill();
+                        ctx.closePath();
+                    }
+
+                    ctx.beginPath();
+                    ctx.arc(game.greenZone.x, game.greenZone.y, game.greenZone.radius, 0, Math.PI * 2, false);
+                    ctx.fillStyle = game.greenZone.color;
+                    ctx.fill();
+                    ctx.closePath();
+                    ctx.beginPath();
+                    ctx.arc(game.greenZone.x, game.greenZone.y, game.greenZone.radius, 0, 2 * Math.PI);
+                    ctx.stroke();
+                    ctx.closePath();
+
+                    game.setDifficulty();
+
+                    setTimeout(() => {
+                        if (lost == true) {
+                            lose();
+                        } else {
+
+                            game.playing = true;
+                            bonusDiv.style.color = "rgb(0,0,0,0)";
+                            bonusDiv.innerHTML = "";
+
+
+                            bonusDiv.className = "";
+                            interval = setInterval(draw, 10);
+
+                        }
+
+                    }, 2000);
+                }
+            }
+
+            if (game.playing == true) {
+                game.setDifficulty();
+                game.greenZone.drawSafePoint();
+
+                for (i = 0; i < game.round.difficulty - (game.round.difficultyGrowth); i++) {
+                    game.redZones[i].drawRedPoint();
+                }
+            }
+
+            game.checkCollision();
+            game.drawBall();
+
+            if (game.greenZone.ballInside() && game.greenZone.goldZoneRadius > game.greenZone.radius && game.ball.getsBonus == false) {  // A JÁTÉKOS BÓNUSZT KAP
+                game.ball.getsBonus = true;
+            }
+
+            game.moveBall();
+            game.time++;
+        }
+
+        document.addEventListener("keydown", keyDownHandler, false);
+        document.addEventListener("keyup", keyUpHandler, false);
+
+        function keyDownHandler(e) {
+            if (e.keyCode == 87 || e.keyCode == 38) {
+                game.ball.upPressed = true;
+            } else if (e.keyCode == 83 || e.keyCode == 40) {
+                game.ball.downPressed = true;
+            } else if (e.keyCode == 65 || e.keyCode == 37) {
+                game.ball.leftPressed = true;
+            } else if (e.keyCode == 68 || e.keyCode == 39) {
+                game.ball.rightPressed = true;
+            }
+
+            if (e.keyCode == 16) {
+                game.ball.sprinting = true;
+            }
+
+            if (e.keyCode == 17) {
+                game.ball.slow = true;
+            }
+
+            if (e.keyCode == 32 && game.round.number == 1) {
+                game.playing = true;
+                interval = setInterval(draw, 10);
+                var spacediv = document.getElementById("spaceDiv");
+                spacediv.remove();
+            }
+        }
+
+        function keyUpHandler(e) {
+            if (e.keyCode == 87 || e.keyCode == 38) {
+                game.ball.upPressed = false;
+            } else if (e.keyCode == 83 || e.keyCode == 40) {
+                game.ball.downPressed = false;
+            } else if (e.keyCode == 65 || e.keyCode == 37) {
+                game.ball.leftPressed = false;
+            } else if (e.keyCode == 68 || e.keyCode == 39) {
+                game.ball.rightPressed = false;
+            }
+
+            if (e.keyCode == 16) {
+                game.ball.sprinting = false;
+            }
+
+            if (e.keyCode == 17) {
+                game.ball.slow = false;
+            }
+
+        }
+
+        function lose() {
+            window.location = "./game.html"
+        }
+
+
+    </script>
+</body>
+
+</html>

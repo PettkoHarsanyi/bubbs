@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bubbs</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <img src="./img/bubbs.jpg" onclick="location.href='./index.html'">
+    <canvas id="gameCanvas" width="1028" height="600";></canvas>
+    
+    <div id="menu">
+        <button onclick="location.href='./game.html'">PLAY</button>
+        <button onclick="location.href='./leaderboard.php'">LEADERBOARD</buttononclick="location.href='./game.html'">
+        <button>HOW TO</button>
+    </div>
+
+    <script>
+        var canvas = document.getElementById("gameCanvas");
+        var ctx = canvas.getContext("2d");
+
+        ball = {
+            x : canvas.width/2, // LABDA X POZÍCIÓJA
+            y : canvas.height/2, // LABDA Y POZÍCIÓJA
+            radius : 10, // LABDA SUGARA
+
+            walkSpeed : 3, // GYALOGLÓ SEBESSÉG
+            sprintSpeed : 10, // SPRINTELŐ SEBESSÉG
+            speed: 0, // AKTUÁLIS SEBESSÉGMÉRŐ
+            
+            sprinting : false,  // SPRINTEL-E
+            slow: false,
+            upPressed : false, // FELFELE MEGY
+            downPressed : false, // LEFELE MEGY
+            leftPressed : false, // BALRA MEGY
+            rightPressed : false, // JOBBRA MEGY
+            getsBonus : false,
+
+            combo : 1
+            
+            
+        }
+        class RedZone { 
+
+            constructor() {
+                this.color = "gold"; // PIROS ZÓNA SZÍNE
+                    do {
+                    this.radius = getRndInteger(5,50); // PIROS ZÓNA SUGARA
+                    this.x = getRndInteger(this.radius,canvas.width-this.radius+1); // PIROS ZÓNA X POZÍCIÓJA
+                    this.y = getRndInteger(this.radius,canvas.height-this.radius+1); // PIROS ZÓNA Y POZÍCIÓJA
+                    } while(this.isColliding());
+            }
+
+            drawRedPoint() { // PIROS ZÓNA KIRAJZOLÁSA
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.closePath();
+            }
+
+            isColliding(){ // ÖSSZEÜTKÖZIK-E EGY MÁSIK PIROS ZÓNÁVAL, VAGY A ZÖLD ZÓNÁVAL, VAGY A JÁTÉKOSSAL. IGAZAT, VAGY HAMISAT AD VISSZA.
+                if(redZones.length>0){
+                    var isIn = false;
+                    for(var redzonee in redZones) {
+                        
+                        if(((this.x + this.radius > redZones[redzonee].x - redZones[redzonee].radius - 20 && this.x -this.radius < redZones[redzonee].x + redZones[redzonee].radius + 20) // ÜTKÖZIK MÁSIK PIROS ZÓNÁVAL X-EN
+                        && (this.y + this.radius > redZones[redzonee].y - redZones[redzonee].radius - 20 && this.y -this.radius < redZones[redzonee].y + redZones[redzonee].radius + 20)) // ÜTKÖZIK MÁSIK PIROS ZÓNÁVAL Y-ON
+                        || ((this.x + this.radius > ball.x - ball.radius - 30 && this.x - this.radius < ball.x + ball.radius + 30) // ÜTKÖZIK A JÁTÉKOSSAL X-EN
+                        && (this.y + this.radius > ball.y - ball.radius - 30 && this.y - this.radius < ball.y + ball.radius + 30)) // ÜTKÖZIK A JÁTÉKOSSAL Y-ON
+                        ){
+                            isIn = true;
+                        }
+                    }
+                }
+                return isIn;
+            }
+        }
+        
+        function checkCollision(){
+            if(ball.y < ball.radius) {
+                ball.y = ball.radius;
+            }
+            if(ball.y > canvas.height - ball.radius) {
+                ball.y = canvas.height - ball.radius;
+            }
+            if(ball.x < ball.radius) {
+                ball.x = ball.radius;
+            }
+            if(ball.x > canvas.width - ball.radius) {
+                ball.x = canvas.width - ball.radius;
+            }
+
+            for(var redzonee in redZones)
+            {
+                var dx = ball.x - redZones[redzonee].x;
+                var dy = ball.y - redZones[redzonee].y;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                if(Math.abs(dx) + Math.abs(dy) != 0 && dist + 3 <= ball.radius + redZones[redzonee].radius) {
+                    ball.x = canvas.width/2; // LABDA X POZÍCIÓJA
+                    ball.y = canvas.height/2; // LABDA Y POZÍCIÓJA
+                }
+            }
+        }
+        
+        function getRndInteger(min, max) { // RANDOM SZÁM MIN ÉS MAX KÖZÖTT, MIN-T BELEÉRTVE
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        redZones = new Array(getRndInteger(10,30));
+
+        for(i=0;i<redZones.length;i++) {
+                redZones[i] = new RedZone();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2, false);
+            ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.closePath();
+            moveBall();
+            checkCollision();
+            
+            for(i=0;i<redZones.length;i++) {
+                redZones[i].drawRedPoint();
+            }
+        }
+
+        function moveBall(){
+            if(ball.upPressed && ball.rightPressed) {
+                ball.y -= Math.cos(45*Math.PI/180) * ball.speed;
+                ball.x += Math.cos(45*Math.PI/180)  *  ball.speed;
+            } else if(ball.upPressed && ball.leftPressed) {
+                    ball.y -= Math.cos(45*Math.PI/180)  *  ball.speed;
+                    ball.x -= Math.cos(45*Math.PI/180)  *  ball.speed;
+            } else if(ball.leftPressed && ball.downPressed) {
+                ball.y += Math.cos(45*Math.PI/180)  *  ball.speed;
+                ball.x -= Math.cos(45*Math.PI/180)  * ball.speed;
+            } else if(ball.rightPressed && ball.downPressed) {
+                ball.y += Math.cos(45*Math.PI/180)  *  ball.speed;
+                ball.x += Math.cos(45*Math.PI/180)  *  ball.speed;
+            } else if(ball.upPressed) {
+                ball.y -= ball.speed;
+            } else if(ball.downPressed) {
+                ball.y += ball.speed;
+            } else if(ball.leftPressed) {
+                ball.x -= ball.speed;
+            } else if(ball.rightPressed) {
+                ball.x += ball.speed;
+            }
+
+            if(ball.sprinting) {
+                ball.speed = ball.sprintSpeed;
+            } else {
+                ball.speed = ball.walkSpeed;
+            }
+        }
+
+        document.addEventListener("keydown", keyDownHandler, false);
+        document.addEventListener("keyup", keyUpHandler, false);
+
+        function keyDownHandler(e) {
+            if(e.keyCode == 87 || e.keyCode == 38) {
+                    ball.upPressed = true;
+            } else if(e.keyCode == 83 || e.keyCode == 40) {
+                    ball.downPressed = true;
+            } else if(e.keyCode == 65 || e.keyCode == 37) {
+                    ball.leftPressed = true;
+            } else if(e.keyCode == 68 || e.keyCode == 39) {
+                    ball.rightPressed = true;
+            }
+
+            if(e.keyCode == 16){
+                ball.sprinting = true;
+            }
+
+            if(e.keyCode == 17) {
+                ball.slow = true;
+            }
+        }
+
+        function keyUpHandler(e) {
+            if(e.keyCode == 87 || e.keyCode == 38) {
+                    ball.upPressed = false;
+            } else if(e.keyCode == 83 || e.keyCode == 40) {
+                    ball.downPressed = false;
+            } else if(e.keyCode == 65 || e.keyCode == 37) {
+                    ball.leftPressed = false;
+            } else if(e.keyCode == 68 || e.keyCode == 39) {
+                    ball.rightPressed = false;
+            }
+
+            if(e.keyCode == 16) {
+                ball.sprinting = false;
+            }
+
+            if(e.keyCode == 17) {
+                ball.slow = false;
+            }
+
+        }
+        setInterval(draw,10);
+    </script>
+
+</body>
+<script> </script>
+</html>
