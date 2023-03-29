@@ -4,17 +4,25 @@
 <head>
     <title>Bubbs</title>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/style.css">
 </head>
 
 <body>
-    <img src="./assets/bubbs.jpg" onclick="location.href='./index.html'">
-    <canvas id="gameCanvas" width="1028" height="600";></canvas>
-    
-    <div id="menu">
-        <button onclick="location.href='./game.html'">PLAY</button>
-        <button onclick="location.href='./assets/leaderboard.php'">LEADERBOARD</buttononclick="location.href='./game.html'">
-        <button>HOW TO</button>
+
+    <div class="container-fluid">
+        <div class="row d-flex flex-md-row" style="height: 100vh; background-color: #42445A;">
+            <div class="col-md-5 order-1 order-md-0 d-flex flex-column align-items-center justify-content-center">
+                <button class="col-9 p-0 p-md-3 mb-md-5 mb-3" onclick="location.href='./game.html'">PLAY</button>
+                <button class="col-9 p-0 p-md-3 mt-md-5 mt-3">HOW TO</button>
+            </div>
+            <div class="col-md-7 order-0 order-md-1 d-flex flex-column align-items-center justify-content-around">
+                <img class="col-7 col-md-6 bubbsImage" src="./assets/bubbs.jpg" onclick="location.href='./index.html'">
+                <canvas class="col-5 col-md-9 bubbsCanvas" id="gameCanvas" width="1028" height="600" ;></canvas>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -22,40 +30,40 @@
         var ctx = canvas.getContext("2d");
 
         ball = {
-            x : canvas.width/2, // LABDA X POZÍCIÓJA
-            y : canvas.height/2, // LABDA Y POZÍCIÓJA
-            radius : 10, // LABDA SUGARA
+            x: canvas.width / 2, // LABDA X POZÍCIÓJA
+            y: canvas.height / 2, // LABDA Y POZÍCIÓJA
+            radius: 10, // LABDA SUGARA
 
-            walkSpeed : 3, // GYALOGLÓ SEBESSÉG
-            sprintSpeed : 10, // SPRINTELŐ SEBESSÉG
+            walkSpeed: 3, // GYALOGLÓ SEBESSÉG
+            sprintSpeed: 10, // SPRINTELŐ SEBESSÉG
             speed: 0, // AKTUÁLIS SEBESSÉGMÉRŐ
-            
-            sprinting : false,  // SPRINTEL-E
-            slow: false,
-            upPressed : false, // FELFELE MEGY
-            downPressed : false, // LEFELE MEGY
-            leftPressed : false, // BALRA MEGY
-            rightPressed : false, // JOBBRA MEGY
-            getsBonus : false,
 
-            combo : 1
-            
-            
+            sprinting: false,  // SPRINTEL-E
+            slow: false,
+            upPressed: false, // FELFELE MEGY
+            downPressed: false, // LEFELE MEGY
+            leftPressed: false, // BALRA MEGY
+            rightPressed: false, // JOBBRA MEGY
+            getsBonus: false,
+
+            combo: 1
+
+
         }
-        class RedZone { 
+        class RedZone {
 
             constructor() {
-                this.color = "gold"; // PIROS ZÓNA SZÍNE
-                    do {
-                    this.radius = getRndInteger(5,50); // PIROS ZÓNA SUGARA
-                    this.x = getRndInteger(this.radius,canvas.width-this.radius+1); // PIROS ZÓNA X POZÍCIÓJA
-                    this.y = getRndInteger(this.radius,canvas.height-this.radius+1); // PIROS ZÓNA Y POZÍCIÓJA
-                    } while(this.isColliding());
+                this.color = "#edae49"; // PIROS ZÓNA SZÍNE
+                do {
+                    this.radius = getRndInteger(5, 50); // PIROS ZÓNA SUGARA
+                    this.x = getRndInteger(this.radius, canvas.width - this.radius + 1); // PIROS ZÓNA X POZÍCIÓJA
+                    this.y = getRndInteger(this.radius, canvas.height - this.radius + 1); // PIROS ZÓNA Y POZÍCIÓJA
+                } while (this.isColliding());
             }
 
             drawRedPoint() { // PIROS ZÓNA KIRAJZOLÁSA
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, false);
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
                 ctx.fillStyle = this.color;
                 ctx.fill();
                 ctx.closePath();
@@ -65,16 +73,16 @@
                 ctx.closePath();
             }
 
-            isColliding(){ // ÖSSZEÜTKÖZIK-E EGY MÁSIK PIROS ZÓNÁVAL, VAGY A ZÖLD ZÓNÁVAL, VAGY A JÁTÉKOSSAL. IGAZAT, VAGY HAMISAT AD VISSZA.
-                if(redZones.length>0){
+            isColliding() { // ÖSSZEÜTKÖZIK-E EGY MÁSIK PIROS ZÓNÁVAL, VAGY A ZÖLD ZÓNÁVAL, VAGY A JÁTÉKOSSAL. IGAZAT, VAGY HAMISAT AD VISSZA.
+                if (redZones.length > 0) {
                     var isIn = false;
-                    for(var redzonee in redZones) {
-                        
-                        if(((this.x + this.radius > redZones[redzonee].x - redZones[redzonee].radius - 20 && this.x -this.radius < redZones[redzonee].x + redZones[redzonee].radius + 20) // ÜTKÖZIK MÁSIK PIROS ZÓNÁVAL X-EN
-                        && (this.y + this.radius > redZones[redzonee].y - redZones[redzonee].radius - 20 && this.y -this.radius < redZones[redzonee].y + redZones[redzonee].radius + 20)) // ÜTKÖZIK MÁSIK PIROS ZÓNÁVAL Y-ON
-                        || ((this.x + this.radius > ball.x - ball.radius - 30 && this.x - this.radius < ball.x + ball.radius + 30) // ÜTKÖZIK A JÁTÉKOSSAL X-EN
-                        && (this.y + this.radius > ball.y - ball.radius - 30 && this.y - this.radius < ball.y + ball.radius + 30)) // ÜTKÖZIK A JÁTÉKOSSAL Y-ON
-                        ){
+                    for (var redzonee in redZones) {
+
+                        if (((this.x + this.radius > redZones[redzonee].x - redZones[redzonee].radius - 20 && this.x - this.radius < redZones[redzonee].x + redZones[redzonee].radius + 20) // ÜTKÖZIK MÁSIK PIROS ZÓNÁVAL X-EN
+                            && (this.y + this.radius > redZones[redzonee].y - redZones[redzonee].radius - 20 && this.y - this.radius < redZones[redzonee].y + redZones[redzonee].radius + 20)) // ÜTKÖZIK MÁSIK PIROS ZÓNÁVAL Y-ON
+                            || ((this.x + this.radius > ball.x - ball.radius - 30 && this.x - this.radius < ball.x + ball.radius + 30) // ÜTKÖZIK A JÁTÉKOSSAL X-EN
+                                && (this.y + this.radius > ball.y - ball.radius - 30 && this.y - this.radius < ball.y + ball.radius + 30)) // ÜTKÖZIK A JÁTÉKOSSAL Y-ON
+                        ) {
                             isIn = true;
                         }
                     }
@@ -82,49 +90,48 @@
                 return isIn;
             }
         }
-        
-        function checkCollision(){
-            if(ball.y < ball.radius) {
+
+        function checkCollision() {
+            if (ball.y < ball.radius) {
                 ball.y = ball.radius;
             }
-            if(ball.y > canvas.height - ball.radius) {
+            if (ball.y > canvas.height - ball.radius) {
                 ball.y = canvas.height - ball.radius;
             }
-            if(ball.x < ball.radius) {
+            if (ball.x < ball.radius) {
                 ball.x = ball.radius;
             }
-            if(ball.x > canvas.width - ball.radius) {
+            if (ball.x > canvas.width - ball.radius) {
                 ball.x = canvas.width - ball.radius;
             }
 
-            for(var redzonee in redZones)
-            {
+            for (var redzonee in redZones) {
                 var dx = ball.x - redZones[redzonee].x;
                 var dy = ball.y - redZones[redzonee].y;
                 var dist = Math.sqrt(dx * dx + dy * dy);
-                if(Math.abs(dx) + Math.abs(dy) != 0 && dist + 3 <= ball.radius + redZones[redzonee].radius) {
-                    ball.x = canvas.width/2; // LABDA X POZÍCIÓJA
-                    ball.y = canvas.height/2; // LABDA Y POZÍCIÓJA
+                if (Math.abs(dx) + Math.abs(dy) != 0 && dist + 3 <= ball.radius + redZones[redzonee].radius) {
+                    ball.x = canvas.width / 2; // LABDA X POZÍCIÓJA
+                    ball.y = canvas.height / 2; // LABDA Y POZÍCIÓJA
                 }
             }
         }
-        
+
         function getRndInteger(min, max) { // RANDOM SZÁM MIN ÉS MAX KÖZÖTT, MIN-T BELEÉRTVE
             return Math.floor(Math.random() * (max - min)) + min;
         }
 
-        redZones = new Array(getRndInteger(10,30));
+        redZones = new Array(getRndInteger(10, 30));
 
-        for(i=0;i<redZones.length;i++) {
-                redZones[i] = new RedZone();
+        for (i = 0; i < redZones.length; i++) {
+            redZones[i] = new RedZone();
         }
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2, false);
-            ctx.fillStyle = "#0095DD";
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = "#07a0c3";
             ctx.fill();
             ctx.closePath();
             ctx.beginPath();
@@ -133,36 +140,36 @@
             ctx.closePath();
             moveBall();
             checkCollision();
-            
-            for(i=0;i<redZones.length;i++) {
+
+            for (i = 0; i < redZones.length; i++) {
                 redZones[i].drawRedPoint();
             }
         }
 
-        function moveBall(){
-            if(ball.upPressed && ball.rightPressed) {
-                ball.y -= Math.cos(45*Math.PI/180) * ball.speed;
-                ball.x += Math.cos(45*Math.PI/180)  *  ball.speed;
-            } else if(ball.upPressed && ball.leftPressed) {
-                    ball.y -= Math.cos(45*Math.PI/180)  *  ball.speed;
-                    ball.x -= Math.cos(45*Math.PI/180)  *  ball.speed;
-            } else if(ball.leftPressed && ball.downPressed) {
-                ball.y += Math.cos(45*Math.PI/180)  *  ball.speed;
-                ball.x -= Math.cos(45*Math.PI/180)  * ball.speed;
-            } else if(ball.rightPressed && ball.downPressed) {
-                ball.y += Math.cos(45*Math.PI/180)  *  ball.speed;
-                ball.x += Math.cos(45*Math.PI/180)  *  ball.speed;
-            } else if(ball.upPressed) {
+        function moveBall() {
+            if (ball.upPressed && ball.rightPressed) {
+                ball.y -= Math.cos(45 * Math.PI / 180) * ball.speed;
+                ball.x += Math.cos(45 * Math.PI / 180) * ball.speed;
+            } else if (ball.upPressed && ball.leftPressed) {
+                ball.y -= Math.cos(45 * Math.PI / 180) * ball.speed;
+                ball.x -= Math.cos(45 * Math.PI / 180) * ball.speed;
+            } else if (ball.leftPressed && ball.downPressed) {
+                ball.y += Math.cos(45 * Math.PI / 180) * ball.speed;
+                ball.x -= Math.cos(45 * Math.PI / 180) * ball.speed;
+            } else if (ball.rightPressed && ball.downPressed) {
+                ball.y += Math.cos(45 * Math.PI / 180) * ball.speed;
+                ball.x += Math.cos(45 * Math.PI / 180) * ball.speed;
+            } else if (ball.upPressed) {
                 ball.y -= ball.speed;
-            } else if(ball.downPressed) {
+            } else if (ball.downPressed) {
                 ball.y += ball.speed;
-            } else if(ball.leftPressed) {
+            } else if (ball.leftPressed) {
                 ball.x -= ball.speed;
-            } else if(ball.rightPressed) {
+            } else if (ball.rightPressed) {
                 ball.x += ball.speed;
             }
 
-            if(ball.sprinting) {
+            if (ball.sprinting) {
                 ball.speed = ball.sprintSpeed;
             } else {
                 ball.speed = ball.walkSpeed;
@@ -173,48 +180,51 @@
         document.addEventListener("keyup", keyUpHandler, false);
 
         function keyDownHandler(e) {
-            if(e.keyCode == 87 || e.keyCode == 38) {
-                    ball.upPressed = true;
-            } else if(e.keyCode == 83 || e.keyCode == 40) {
-                    ball.downPressed = true;
-            } else if(e.keyCode == 65 || e.keyCode == 37) {
-                    ball.leftPressed = true;
-            } else if(e.keyCode == 68 || e.keyCode == 39) {
-                    ball.rightPressed = true;
+            if (e.keyCode == 87 || e.keyCode == 38) {
+                ball.upPressed = true;
+            } else if (e.keyCode == 83 || e.keyCode == 40) {
+                ball.downPressed = true;
+            } else if (e.keyCode == 65 || e.keyCode == 37) {
+                ball.leftPressed = true;
+            } else if (e.keyCode == 68 || e.keyCode == 39) {
+                ball.rightPressed = true;
             }
 
-            if(e.keyCode == 16){
+            if (e.keyCode == 16) {
                 ball.sprinting = true;
             }
 
-            if(e.keyCode == 17) {
+            if (e.keyCode == 17) {
                 ball.slow = true;
             }
         }
 
         function keyUpHandler(e) {
-            if(e.keyCode == 87 || e.keyCode == 38) {
-                    ball.upPressed = false;
-            } else if(e.keyCode == 83 || e.keyCode == 40) {
-                    ball.downPressed = false;
-            } else if(e.keyCode == 65 || e.keyCode == 37) {
-                    ball.leftPressed = false;
-            } else if(e.keyCode == 68 || e.keyCode == 39) {
-                    ball.rightPressed = false;
+            if (e.keyCode == 87 || e.keyCode == 38) {
+                ball.upPressed = false;
+            } else if (e.keyCode == 83 || e.keyCode == 40) {
+                ball.downPressed = false;
+            } else if (e.keyCode == 65 || e.keyCode == 37) {
+                ball.leftPressed = false;
+            } else if (e.keyCode == 68 || e.keyCode == 39) {
+                ball.rightPressed = false;
             }
 
-            if(e.keyCode == 16) {
+            if (e.keyCode == 16) {
                 ball.sprinting = false;
             }
 
-            if(e.keyCode == 17) {
+            if (e.keyCode == 17) {
                 ball.slow = false;
             }
 
         }
-        setInterval(draw,10);
+        setInterval(draw, 10);
     </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+        crossorigin="anonymous"></script>
 </body>
 <script> </script>
+
 </html>

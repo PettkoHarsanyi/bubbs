@@ -6,14 +6,35 @@
 
     <title>Bubbs</title>
 
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous"> -->
     <link rel="stylesheet" media="screen and (max-width: 19200px)" href="./assets/widescreen.css">
     <link rel="stylesheet" media="screen and (max-width: 1740px)" href="./assets/smallscreen.css">
 </head>
 
 <body>
+
+    <!-- <div class="container-fluid">
+        <div class="row d-flex flex-md-row" style="height: 100vh; background-color: #42445A;">
+            <div class="col-2" style="background-color: aqua;">
+
+            </div>
+
+            <div class="col-8 d-flex flex-column justify-content-center" style="background-color: coral;">
+                <div class="ratio ratio-16x9">
+                    <canvas class="col-12 d-flex flex-column align-items-center justify-content-around" id="gameCanvas"
+                        width="1280" height="720" style="background-color: black;" ;></canvas>
+                </div>
+            </div>
+
+            <div class="col-2" style="background-color: aqua;">
+            </div>
+        </div>
+    </div> -->
+
     <canvas id="gameCanvas" width="1280" height="720" ;></canvas>
     <button onclick="location.href='./index.html'">BACK</button>
-    <div id="spaceDiv">PRESS SPACE TO START</div>
+    <!-- <div id="spaceDiv">PRESS SPACE TO START</div> -->
     <div id="idk"></div>
     <div id="scoreDiv" style="display: inline-block">
         <p style="font-size: 2vw;position:absolute; top:-2.4vw;">Points</p>0
@@ -23,9 +44,9 @@
         <p style="font-size: 2vw;position:absolute; top:-2.4vw;">Combo</p>
     </div>
 
-    <script src="./assets/redzone.js" ></script>
-    <script src="./assets/greenzone.js" ></script>
-    <script src="./assets/game.js" ></script>
+    <script src="./assets/redzone.js"></script>
+    <script src="./assets/greenzone.js"></script>
+    <script src="./assets/game.js"></script>
     <script>
         var canvas = document.getElementById("gameCanvas");
         var ctx = canvas.getContext("2d");
@@ -219,6 +240,7 @@
             }
 
             if (e.keyCode == 32 && game.round.number == 1) {
+                console.log("kezdünk")
                 game.playing = true;
                 interval = setInterval(draw, 10);
                 var spacediv = document.getElementById("spaceDiv");
@@ -253,6 +275,9 @@
 
 
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

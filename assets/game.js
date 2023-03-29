@@ -1,6 +1,8 @@
 class Game {
     constructor(ctx){
         this.ctx = ctx;
+        this.redZones = new Array(this.round.difficulty);
+        this.greenZone = new GreenZone(this);
     }
     playing = false;
     ball = {
@@ -29,8 +31,7 @@ class Game {
         refreshAdd: 100, // ENNYIVEL
         refresh: 400, // EZREDMÁSODPERC
     }
-    redZones = new Array(this.round.difficulty); // PIROS ZÓNÁK TÖMBJE
-    greenZone = new GreenZone(this);
+    // redZones = new Array(this.round.difficulty); // PIROS ZÓNÁK TÖMBJE
     time = 0;
     score = 0;
     scoreGive = 10;
