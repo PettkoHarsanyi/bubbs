@@ -6,28 +6,6 @@ body {
     text-align: center;
 }
 
-.indexFlex {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: row;
-}
-
-@media (max-width: 800px) {
-    .indexFlex {
-      flex-direction: column;
-    }
-  }
-
-.flexRight {
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5rem;
-}
-
 .bubbsImage {
     border: 0.3rem solid black;
     border-radius: 1rem;
@@ -58,52 +36,6 @@ body {
     width: 80%;
 }
 
-
-.flexLeft {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    flex: 1;
-    padding: 5rem;
-    gap: 5rem;
-}
-
-table {
-    margin: 0pt auto;
-    margin-top: 10vw;
-    border: 0.3vw solid black;
-    font-size: 3vw;
-    border-collapse: collapse;
-    width: 60%;
-    font-family: 'Franklin Gothic Medium';
-}
-
-tr th {
-    border-bottom: 0.3vw solid black;
-    padding: 1vw;
-    background-color: goldenrod;
-    font-size: 4vw;
-}
-
-td {
-    text-align: center;
-    border-bottom: 0.2vw solid black;
-}
-
-tr:not(:first-child) {
-    height: 6vw;
-    background-color: hsl(0, 0%, 65%);
-}
-
-tr:first-child {
-    width: 1pt;
-    border-right: 1pt solid black;
-}
-
-table {
-    height: 100pt;
-    overflow: scroll;
-}
 
 button {
     color: #edae49;
