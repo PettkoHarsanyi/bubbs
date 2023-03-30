@@ -27,6 +27,7 @@ canvas {
     position: absolute;
     top: 25vw;
     left: 25vw;
+    z-index: 0;
 }
 
 
