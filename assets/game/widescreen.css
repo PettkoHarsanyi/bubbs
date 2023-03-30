@@ -20,25 +20,12 @@ canvas {
     aspect-ratio: 16 / 9;
 }
 
-button {
-
-    color:white;
-    background-color: rgb(0,0,0, 0.4);
-    box-shadow: 0px 0px 0 0 rgba(0,0,0,0);
-    text-shadow: none;
-    outline: none;
-    border:0.2vw outset black;
-    font-family: 'Franklin Gothic Medium';
-    font-weight:400;
-
+.backButton {
     width: 10%;
     height: 4vw;
     top: 6vw;
     left: 3vw;
     position:absolute;
-    box-shadow: 0 4px 10px 0px rgba(0, 0, 0, 0.8), 0 6px 30px 5px rgba(0, 0, 0, 0.8);
-
-    font-size: 2vw;
     transition: .25s ease-out;
 }
 

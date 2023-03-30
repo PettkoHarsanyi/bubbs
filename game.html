@@ -15,18 +15,22 @@
 
 <body>
 
-    <div id="endPanel" class="endPanel">
-        <div style="height: 70%; display: flex; flex-direction: column; justify-content: center; gap: 3vh; align-items: center;">
+    <form action="savePlayer.php" method="post" id="endPanel" class="endPanel">
+        <div
+            style="height: 70%; display: flex; flex-direction: column; justify-content: center; gap: 3vh; align-items: center;">
             <div style="font-size: 3vh;">Name:</div>
-            <input style="width: 60%;" />
+            <input id="playerName" name="playername" style="width: 60%;" />
         </div>
-        <div style="height: 30%; display: flex; justify-content: space-around; padding: 3vh;">
-            <div class="endPanelButton" style="background-color: gray;" onclick="location.href='./game.html'">Cancel</div>
-            <div class="endPanelButton" style="background-color: green;">Save</div>
+        <div style="height: 30%; display: flex; justify-content: space-around; padding: 3vh; gap: 2vh">
+            <div class="endPanelButton" style="background-color: gray;" onclick="location.href='./game.html'">Cancel
+                (Esc)
+            </div>
+            <button type="submit" id="endPanelButton" class="endPanelButton" style="background-color: green;">Save
+                (Enter)</button>
         </div>
-    </div>
+    </form>
     <canvas id="gameCanvas" width="1280" height="720" ;></canvas>
-    <button onclick="location.href='./index.html'">BACK</button>
+    <button class="backButton" onclick="location.href='./index.html'">BACK</button>
     <div id="spaceDiv">PRESS SPACE TO START</div>
     <div id="idk"></div>
     <div id="scoreDiv" style="display: inline-block">
@@ -185,11 +189,12 @@
 
                     game.setDifficulty();
 
-                    setTimeout(() => {
-                        if (lost == true) {
-                            document.getElementById("endPanel").style.visibility = "visible";
-                        } else {
+                    if (lost) {
+                        lose();
+                    }
 
+                    setTimeout(() => {
+                        if (!lost) {
                             game.playing = true;
                             bonusDiv.style.color = "rgb(0,0,0,0)";
                             bonusDiv.innerHTML = "";
@@ -253,6 +258,9 @@
                 var spacediv = document.getElementById("spaceDiv");
                 spacediv.remove();
             }
+
+
+
         }
 
         function keyUpHandler(e) {
@@ -274,12 +282,75 @@
                 game.ball.slow = false;
             }
 
+            if (e.keyCode == 27 && game.playing == false) {
+                window.location = window.location.href
+            }
+
+
+            if (e.keyCode == 13 && game.playing == false) {
+
+                // 
+                // save
+                // 
+
+                const playerName = document.getElementById("playerName");
+
+                if (playerName.value !== "") {
+                    document.getElementById("endPanel").submit();
+
+                    // savePlayer()
+
+                    // window.location = window.location.href
+                }
+            }
+        }
+
+        async function savePlayer() {
+            const newPlayerName = document.getElementById("playerName").value;
+            var players = [];
+            await fetch('./players.json')
+                .then((response) => response.json())
+                .then((json) => players = json);
+
+            var isAlready = false;
+            var foundIndex;
+            players.map((player, index) => {
+                if (player.name == newPlayerName) {
+                    isAlready = true;
+                    foundIndex = index
+                }
+            })
+
+            if (isAlready) {
+                if (game.score > players[foundIndex].points) {
+                    players[foundIndex] = { "name": players[foundIndex].name, "points": game.score }
+                } else {
+                    return;
+                }
+
+            } else {
+                players.push({ "name": newPlayerName, "points": game.score })
+            }
+
+            const fs = require('fs');
+
+            fs.writeFile('players.json', players, (err) => {
+
+                // In case of a error throw err.
+                if (err) throw err;
+            })
         }
 
         function lose() {
-            window.location = "./game.html"
+            const endPanel = document.getElementById("endPanel");
+            const playerName = document.getElementById("playerName");
+            endPanel.style.visibility = "visible"
+            playerName.focus();
         }
 
+        document.getElementById("endPanelButton").addEventListener("click", function (event) {
+            event.preventDefault()
+        });
 
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"

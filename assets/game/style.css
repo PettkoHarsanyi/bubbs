@@ -13,7 +13,7 @@ body {
     box-shadow: 0px 0px 11px 5px rgba(0, 0, 0, 1);
 }
 
-button {
+.backButton {
     color: #edae49;
     border-radius: 1rem;
     background-color: #42445A;
@@ -30,7 +30,7 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.backButton:hover {
     -webkit-box-shadow: 0px 0px 30px 5px rgba(0, 0, 0, 1);
     -moz-box-shadow: 0px 0px 30px 5px rgba(0, 0, 0, 1);
     box-shadow: 0px 0px 30px 5px rgba(0, 0, 0, 1);
@@ -56,7 +56,8 @@ button:hover {
 }
 
 .endPanelButton {
-    width: 30%;
+    width: 50%;
+    color: white;
     border: 0.5vh solid white;
     display: flex;
     align-items: center;

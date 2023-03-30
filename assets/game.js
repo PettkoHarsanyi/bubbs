@@ -87,7 +87,7 @@ class Game {
             var dy = this.ball.y - this.redZones[redzonee].y;
             var dist = Math.sqrt(dx * dx + dy * dy);
             if (Math.abs(dx) + Math.abs(dy) != 0 && dist + 3 <= this.ball.radius + this.redZones[redzonee].radius) {
-                document.getElementById("endPanel").style.visibility = "visible";
+                lose();
                 clearInterval(interval);
                 this.playing = false;
             }
