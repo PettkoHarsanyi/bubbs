@@ -14,9 +14,10 @@ canvas {
     background: black; 
     display: block; 
     margin: 0 auto; 
-    margin-top: 5vw;
+    margin-top: 4vw;
     box-shadow: 0 4px 30px 0px rgba(0, 0, 0, 0.8), 0 6px 40px 5px rgba(0, 0, 0, 0.8); 
-    width: 67vw;
+    width: 70vw;
+    aspect-ratio: 16 / 9;
 }
 
 button {
@@ -59,6 +60,7 @@ button {
     border: 0.2vw solid black;
     color: white;
     font-size:3.5vw;
+    border-radius: 1rem;
 
     background-color: rgb(0,0,0, 0.4);
     box-shadow: 0 4px 10px 0px rgba(0, 0, 0, 0.8), 0 6px 30px 5px rgba(0, 0, 0, 0.8);
@@ -74,9 +76,11 @@ button {
     margin-right: 20pt;
     font-size: 3.5vw; 
     color: rgb(255,215,0,0);
+    border-radius: 1rem;
 
     background-color: rgb(0,0,0, 0.4);
     box-shadow: 0 4px 10px 0px rgba(0, 0, 0, 0.8), 0 6px 30px 5px rgba(0, 0, 0, 0.8);
+    border-radius: 1rem;
 
 
 }
@@ -103,6 +107,7 @@ button {
     border:0.2vw solid black;
     font-size: 3.5vw;
     background-color: gold;
+    border-radius: 1rem;
     
     color: grey;
     text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 1px 1px black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;

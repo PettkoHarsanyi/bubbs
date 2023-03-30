@@ -1,3 +1,10 @@
+html,
+body {
+    height: 100%;
+    overflow: auto;
+    background-color: #42445A;
+}
+
 .gameCanvas {
     border-radius: 1rem;
     border: 0.3rem solid black;
@@ -14,7 +21,7 @@ button {
     border: 0.3rem solid #edae49;
     font-family: 'Franklin Gothic Medium';
     border-radius: 0.7rem;
-    font-size: 2rem;
+    font-size: 2vw;
 
     transition: .25s ease-out;
     -webkit-box-shadow: 0px 0px 11px 5px rgba(0, 0, 0, 1);
@@ -27,43 +34,5 @@ button:hover {
     -webkit-box-shadow: 0px 0px 30px 5px rgba(0, 0, 0, 1);
     -moz-box-shadow: 0px 0px 30px 5px rgba(0, 0, 0, 1);
     box-shadow: 0px 0px 30px 5px rgba(0, 0, 0, 1);
-    font-size: 2.5rem;
-}
-
-.infopanel {
-    color: #edae49;
-    border-radius: 1rem;
-    background-color: #42445A;
-    outline: none;
-    border: 0.3rem solid #edae49;
-    font-family: 'Franklin Gothic Medium';
-    border-radius: 0.7rem;
-    font-size: 2rem;
-    text-align: center;
-    aspect-ratio: 2/1;
-
-    transition: .25s ease-out;
-    -webkit-box-shadow: 0px 0px 11px 5px rgba(0, 0, 0, 1);
-    -moz-box-shadow: 0px 0px 11px 5px rgba(0, 0, 0, 1);
-    text-shadow: 0px 0px 1rem rgb(0, 0, 0);
-    box-shadow: 0px 0px 11px 5px rgba(0, 0, 0, 1), inset 0rem 0rem 0.5rem black;;
-}
-
-.bonuspanel{
-    color: #edae49;
-    text-shadow: 0px 0px 1rem rgb(0, 0, 0);
-    border-radius: 1rem;
-    background-color: #edae49;
-    outline: none;
-    border: 0.3rem solid #edae49;
-    font-family: 'Franklin Gothic Medium';
-    border-radius: 0.7rem;
-    font-size: 2rem;
-    text-align: center;
-    aspect-ratio: 2/1;
-
-    transition: .25s ease-out;
-    -webkit-box-shadow: 0px 0px 11px 5px #edae49;
-    -moz-box-shadow: 0px 0px 11px 5px #edae49;
-    box-shadow: 0px 0px 11px 5px black, inset 0rem 0rem 2rem black;
+    font-size: 2.5vw;
 }
