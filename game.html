@@ -15,11 +15,13 @@
 
 <body>
 
-    <form action="savePlayer.php" method="post" id="endPanel" class="endPanel">
+    <form action="http://localhost:8000/savePlayer.php" method="post" id="endPanel" class="endPanel">
         <div
             style="height: 70%; display: flex; flex-direction: column; justify-content: center; gap: 3vh; align-items: center;">
             <div style="font-size: 3vh;">Name:</div>
             <input id="playerName" name="playername" style="width: 60%;" />
+            <input type="hidden" id="points" name="points" value="0">
+            <input type="hidden" id="location" name="location" value="">
         </div>
         <div style="height: 30%; display: flex; justify-content: space-around; padding: 3vh; gap: 2vh">
             <div class="endPanelButton" style="background-color: gray;" onclick="location.href='./game.html'">Cancel
@@ -292,7 +294,8 @@
                 // 
                 // save
                 // 
-
+                document.getElementById("points").value = game.score;
+                document.getElementById("location").value = window.location.href;
                 const playerName = document.getElementById("playerName");
 
                 if (playerName.value !== "") {
@@ -304,43 +307,6 @@
                 }
             }
         }
-
-        async function savePlayer() {
-            const newPlayerName = document.getElementById("playerName").value;
-            var players = [];
-            await fetch('./players.json')
-                .then((response) => response.json())
-                .then((json) => players = json);
-
-            var isAlready = false;
-            var foundIndex;
-            players.map((player, index) => {
-                if (player.name == newPlayerName) {
-                    isAlready = true;
-                    foundIndex = index
-                }
-            })
-
-            if (isAlready) {
-                if (game.score > players[foundIndex].points) {
-                    players[foundIndex] = { "name": players[foundIndex].name, "points": game.score }
-                } else {
-                    return;
-                }
-
-            } else {
-                players.push({ "name": newPlayerName, "points": game.score })
-            }
-
-            const fs = require('fs');
-
-            fs.writeFile('players.json', players, (err) => {
-
-                // In case of a error throw err.
-                if (err) throw err;
-            })
-        }
-
         function lose() {
             const endPanel = document.getElementById("endPanel");
             const playerName = document.getElementById("playerName");

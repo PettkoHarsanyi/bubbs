@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bubbs</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/leaderboard/style.css">
+</head>
+
+<body>
+    <button onclick="location.href='./index.html'">BACK</button>
+
+    <div style="width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center;">
+        <div class="tableContainer">
+            <table class="table" id="myTable">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Points</th>
+                    </tr>
+                </thead>
+                <tbody id="players">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        fetch("http://localhost:8000/")
+            .then((response) => {
+                if (!response.ok) { // Before parsing (i.e. decoding) the JSON data,
+                    // check for any errors.
+                    // In case of an error, throw.
+                    throw new Error("Something went wrong!");
+                }
+                return response.json(); // Parse the JSON data.
+            }).then((response) => {
+                console.log(response);
+                const playersDOM = document.getElementById("players");
+                var tbodyRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
+
+                response.map((player, index) => {
+
+                    var newRow = tbodyRef.insertRow();
+
+                    var newCell1 = newRow.insertCell();
+                    newCell1.innerHTML = index+1
+
+                    var newCell2 = newRow.insertCell();
+                    newCell2.innerHTML = player.name;
+
+                    var newCell3 = newRow.insertCell();
+                    newCell3.innerHTML = player.points;
+
+                    // playersDOM.appendChild(`<tr>
+                    //     <th scope="row">${index}</th>
+                    //     <td>${player.name}</td>
+                    //     <td>${player.points}</td>
+                    // </tr>`)
+                })
+
+            })
+            .catch((error) => {
+                // This is where you handle errors.
+            });
+    </script>
+</body>
+
+</html>
