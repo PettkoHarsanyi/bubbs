@@ -14,13 +14,12 @@
 
 <body>
 
-    <form action="http://bubbsbackend-env-2.eba-tmhxefpv.eu-west-3.elasticbeanstalk.com/backend/savePlayer.php" method="post" id="endPanel" class="endPanel">
+    <form onsubmit="submitform(event)" id="endPanel" class="endPanel">
         <div
             style="height: 70%; display: flex; flex-direction: column; justify-content: center; gap: 3vh; align-items: center;">
             <div style="font-size: 3vh;">Name:</div>
-            <input id="playerName" name="playername" style="width: 60%;" />
+            <input id="playerName" name="name" style="width: 60%;" />
             <input type="hidden" id="points" name="points" value="0">
-            <input type="hidden" id="location" name="location" value="">
         </div>
         <div style="height: 30%; display: flex; justify-content: space-around; padding: 3vh; gap: 2vh">
             <div class="endPanelButton" style="background-color: gray;" onclick="location.href='./game.html'">Cancel
@@ -294,11 +293,10 @@
                 // save
                 // 
                 document.getElementById("points").value = game.score;
-                document.getElementById("location").value = window.location.href;
                 const playerName = document.getElementById("playerName");
 
                 if (playerName.value !== "") {
-                    document.getElementById("endPanel").submit();
+                    // document.getElementById("endPanel").submit();
 
                     // savePlayer()
 
@@ -313,9 +311,26 @@
             playerName.focus();
         }
 
-        document.getElementById("endPanelButton").addEventListener("click", function (event) {
-            event.preventDefault()
-        });
+        function submitform(event) {
+            event.preventDefault();
+
+            const playerName = document.getElementById("playerName").value;
+            const points = game.score
+
+            const data = { "name": playerName, "points": points }
+
+            fetch("http://localhost:3000/saveplayer", {
+                method: "POST", headers: {
+                    "Content-Type": "application/json",
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                }, body: JSON.stringify(data)
+            })
+
+            window.location = window.location.href
+
+        }
+
+
 
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
