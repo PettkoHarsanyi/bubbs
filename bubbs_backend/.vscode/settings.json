@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/f8577fa2-2339-427e-a494-4eefaf003b01/resourceGroups/AppServiceQS-rg/providers/Microsoft.Web/sites/bubbs-backend",
+    "appService.deploySubpath": "."
+}
