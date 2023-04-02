@@ -24,7 +24,6 @@ app.post("/saveplayer", (req, res) => {
             isAlready = true;
             console.log(newPlayer.points + " " + player.points);
             if(newPlayer.points > player.points){
-                console.log("nagyobb az uj")
                 return {name: player.name, points: newPlayer.points}
             }
         }
@@ -34,6 +33,8 @@ app.post("/saveplayer", (req, res) => {
     if(!isAlready){
         data.push(newPlayer);
     }
+
+    data.sort((a,b)=> b.points - a.points)
 
     writeData(data);
 
